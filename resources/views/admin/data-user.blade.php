@@ -69,8 +69,14 @@
         width: 5px; 
         height: 5px;
         }
+        body {
+            margin-top: 0;
+            padding-top: 0;
+        }
 
-        
+        .navbar-custom {
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
