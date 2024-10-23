@@ -15,7 +15,7 @@ class Data extends Model
     protected $fillable = [
         'nomer_polisi',
         'volume',
-        'nama_user',
+        'nama_sopir',
         // Tambahkan field lain sesuai kebutuhan
     ];
 }

@@ -92,9 +92,16 @@
         <form id="form-karyawan" action="{{ route('dashboard.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row mb-3">
+            <div class="row mb-3">
                 <div class="col-md-6 col-12">
                     <label for="no_po" class="form-label">Nomer PO:</label>
-                    <input type="text" class="form-control" id="no_po" name="no_po" required>
+                    <input type="text" class="form-control @error('no_po') is-invalid @enderror" id="no_po" name="no_po" value="{{ old('no_po') }}" required>
+
+                    @error('no_po')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
                 <div class="col-md-6 col-12">
                     <label for="tanggal" class="form-label">Tanggal:</label>

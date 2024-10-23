@@ -40,51 +40,6 @@ class KaryawanController extends Controller
     $karyawans = Karyawan::where('is_deleted', false)->get();
     return view('admin.tampilan', compact('karyawans'));
   }
-  //     public function importFromExcel(Request $request)
-  // {
-  //     $request->validate([
-  //         'file' => 'required|mimes:xlsx,xls'
-  //     ]);
-
-  //     // Load the spreadsheet
-  //     $spreadsheet = IOFactory::load($request->file('file')->path());
-  //     $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-
-  //     try {
-  //         // Mulai dari indeks 2 untuk melewati header
-  //         foreach ($sheetData as $index => $row) {
-  //             if ($index < 2) {
-  //                 continue; // Lewati baris pertama jika merupakan header
-  //             }
-
-  //             // Cek apakah kolom yang diperlukan tidak kosong
-  //             if (!empty($row['A']) && !empty($row['B']) && !empty($row['C'])) {
-  //                 // Ganti koma menjadi titik pada nilai volume untuk format desimal
-  //                 $volume = str_replace(',', '.', $row['B']);
-
-  //                 // Tampilkan data sebelum insert
-  //                 // dd([  // Uncomment untuk melihat data jika perlu
-  //                 //     'nomer_polisi' => $row['A'],
-  //                 //     'volume' => $volume,
-  //                 //     'nama_sopir' => $row['C'],
-  //                 // ]);
-
-  //                 // Simpan ke database
-  //                 Data::create([
-  //                     'nomer_polisi' => $row['A'], // Kolom A untuk NoPol
-  //                     'volume' => $volume, // Kolom B untuk Vol
-  //                     'nama_sopir' => $row['C'], // Kolom C untuk Sopir
-  //                 ]);
-  //             }
-  //         }
-
-  //     } catch (\Exception $e) {
-  //         // Tampilkan kesalahan jika terjadi
-  //         return redirect()->back()->withErrors('Error: ' . $e->getMessage());
-  //     }
-
-  //     return redirect()->back()->with('success', 'Data berhasil diimpor!');
-  // }
 
 
 
@@ -360,40 +315,86 @@ class KaryawanController extends Controller
 
     return redirect()->route('dashboard')->with('success', 'Data berhasil diperbarui!');
   }
+  // public function store(Request $request)
+  // {
+  //   $validated = $request->validate([
+  //     'no_po' => 'required|string|max:255',
+  //     'tanggal' => 'required|date',
+  //     'nomer_polisi' => 'required|string|max:255',
+  //     'volume' => 'required',
+  //     'nama_transportir' => 'required|string|max:255',
+  //     'nama_user' => 'required|string|max:255',
+  //     'file_upload' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
+  //     'second_file_upload' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
+  //   ]);
+
+
+  //   $fileUploadPath = $request->hasFile('file_upload') ? $request->file('file_upload')->store('uploads', 'public') : null;
+  //   $secondFileUploadPath = $request->hasFile('second_file_upload') ? $request->file('second_file_upload')->store('uploads', 'public') : null;
+
+
+  //   Karyawan::create([
+  //     'no_po' => $validated['no_po'],
+  //     'tanggal' => $validated['tanggal'],
+  //     'nomer_polisi' => $validated['nomer_polisi'],
+  //     'volume' => $validated['volume'],
+  //     'nama_transportir' => $validated['nama_transportir'],
+  //     'nama_user' => $validated['nama_user'],
+  //     'file_upload' => $fileUploadPath,
+  //     'second_file_upload' => $secondFileUploadPath,
+  //   ]);
+
+
+  //   session()->flash('success', 'Data berhasil disimpan!');
+
+  //   return back()->with('success', 'Data berhasil disimpan.');
+  // }
+
   public function store(Request $request)
   {
-    $validated = $request->validate([
-      'no_po' => 'required|string|max:255',
-      'tanggal' => 'required|date',
-      'nomer_polisi' => 'required|string|max:255',
-      'volume' => 'required',
-      'nama_transportir' => 'required|string|max:255',
-      'nama_user' => 'required|string|max:255',
-      'file_upload' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
-      'second_file_upload' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-
-    $fileUploadPath = $request->hasFile('file_upload') ? $request->file('file_upload')->store('uploads', 'public') : null;
-    $secondFileUploadPath = $request->hasFile('second_file_upload') ? $request->file('second_file_upload')->store('uploads', 'public') : null;
-
-
-    Karyawan::create([
-      'no_po' => $validated['no_po'],
-      'tanggal' => $validated['tanggal'],
-      'nomer_polisi' => $validated['nomer_polisi'],
-      'volume' => $validated['volume'],
-      'nama_transportir' => $validated['nama_transportir'],
-      'nama_user' => $validated['nama_user'],
-      'file_upload' => $fileUploadPath,
-      'second_file_upload' => $secondFileUploadPath,
-    ]);
-
-
-    session()->flash('success', 'Data berhasil disimpan!');
-
-    return back()->with('success', 'Data berhasil disimpan.');
+      // Validasi input
+      $validated = $request->validate([
+          'no_po' => 'required|string|max:255',
+          'tanggal' => 'required|date',
+          'nomer_polisi' => 'required|string|max:255',
+          'volume' => 'required',
+          'nama_transportir' => 'required|string|max:255',
+          'nama_user' => 'required|string|max:255',
+          'file_upload' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
+          'second_file_upload' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
+      ]);
+  
+      // Cek apakah no_po sudah ada di database
+      $existingPo = Karyawan::where('no_po', $validated['no_po'])->first();
+  
+      if ($existingPo) {
+          // Jika nomor PO sudah terdaftar, kembali dengan pesan error
+          return back()->withErrors(['no_po' => 'Nomor PO anda telah terdaftar!'])->withInput();
+      }
+  
+      // Upload file jika ada
+      $fileUploadPath = $request->hasFile('file_upload') ? $request->file('file_upload')->store('uploads', 'public') : null;
+      $secondFileUploadPath = $request->hasFile('second_file_upload') ? $request->file('second_file_upload')->store('uploads', 'public') : null;
+  
+      // Simpan data baru
+      Karyawan::create([
+          'no_po' => $validated['no_po'],
+          'tanggal' => $validated['tanggal'],
+          'nomer_polisi' => $validated['nomer_polisi'],
+          'volume' => $validated['volume'],
+          'nama_transportir' => $validated['nama_transportir'],
+          'nama_user' => $validated['nama_user'],
+          'file_upload' => $fileUploadPath,
+          'second_file_upload' => $secondFileUploadPath,
+      ]);
+  
+      // Set flash message untuk notifikasi sukses
+      session()->flash('success', 'Data berhasil disimpan!');
+  
+      return back()->with('success', 'Data berhasil disimpan.');
   }
+  
+
   public function import(Request $request)
   {
     // Validasi file yang diunggah
@@ -420,11 +421,12 @@ class KaryawanController extends Controller
   public function storeOrUpdateData(Request $request)
   {
       // Validasi data yang masuk
+      // Validasi input form
       $validatedData = $request->validate([
-          'nomer_polisi' => 'required|string|max:255',
-          'volume' => 'required|numeric', // Validasi untuk angka
-          'nama_sopir' => 'required|string|max:255',
-      ]);
+        'nomer_polisi' => 'required|string|max:255',
+        'volume' => 'required|numeric',
+        'nama_sopir' => 'required|string|max:255',
+    ]);
   
       // Cek apakah nomer_polisi sudah ada di database
       $existingData = Data::where('nomer_polisi', $validatedData['nomer_polisi'])->first();
@@ -522,66 +524,73 @@ class KaryawanController extends Controller
   }
 
   public function importExcel(Request $request)
-  {
+{
     $request->validate([
-      'file' => 'required|mimes:xlsx,xls',
+        'file' => 'required|mimes:xlsx,xls',
     ]);
 
     try {
-      // Get the uploaded file
-      $file = $request->file('file');
+        // Get the uploaded file
+        $file = $request->file('file');
 
-      // Load the spreadsheet file using PhpSpreadsheet
-      $spreadsheet = IOFactory::load($file->getPathname());
-      $worksheet = $spreadsheet->getActiveSheet();
+        // Load the spreadsheet file using PhpSpreadsheet
+        $spreadsheet = IOFactory::load($file->getPathname());
+        $worksheet = $spreadsheet->getActiveSheet();
 
-      // Get the highest row and column numbers
-      $highestRow = $worksheet->getHighestRow();
-      $highestColumn = $worksheet->getHighestColumn();
+        // Get the highest row and column numbers
+        $highestRow = $worksheet->getHighestRow();
 
-      $importData = [];
+        $importData = [];
 
-      // Iterate over rows, skipping the first (header) row
-      for ($row = 2; $row <= $highestRow; $row++) {
-        $noPol = $worksheet->getCell('B' . $row)->getValue();
-        $vol = $worksheet->getCell('C' . $row)->getValue();
-        $sopir = $worksheet->getCell('D' . $row)->getValue();
+        // Iterate over rows, skipping the first (header) row
+        for ($row = 2; $row <= $highestRow; $row++) {
+            $noPol = $worksheet->getCell('B' . $row)->getValue();
+            $vol = $worksheet->getCell('C' . $row)->getValue();
+            $sopir = $worksheet->getCell('D' . $row)->getValue();
 
-        $vol = trim($vol); // Remove any extra spaces
-        $vol = str_replace(',', '.', $vol); // Replace comma with dot for decimal
-        $vol = is_numeric($vol) ? (float)$vol : 0; // Convert to float if numeric, otherwise set to 0
+            $vol = trim($vol); // Remove any extra spaces
+            $vol = str_replace(',', '.', $vol); // Replace comma with dot for decimal
+            $vol = is_numeric($vol) ? (float)$vol : 0; // Convert to float if numeric, otherwise set to 0
 
-        // Ensure that required fields are present
-        if ((!empty($noPol) && !empty($vol) && !empty($sopir)) && ($noPol !== 'NoPol' && $vol !== 'Vol' && $sopir !== 'Sopir')) {
-          $importData[] = [
-            'nomer_polisi' => $noPol,
-            'volume' => $vol,
-            'nama_sopir' => $sopir,
-          ];
+            // Ensure that required fields are present
+            if ((!empty($noPol) && !empty($vol) && !empty($sopir)) && ($noPol !== 'NoPol' && $vol !== 'Vol' && $sopir !== 'Sopir')) {
+                // Cek apakah nomor polisi sudah ada di database
+                $exists = DB::table('data')->where('nomer_polisi', $noPol)->exists();
+
+                // Jika nomor polisi belum ada, tambahkan ke array data untuk diimport
+                if (!$exists) {
+                    $importData[] = [
+                        'nomer_polisi' => $noPol,
+                        'volume' => $vol,
+                        'nama_sopir' => $sopir,
+                    ];
+                }
+            }
         }
-      }
 
-      // Insert data in a transaction
-      if (!empty($importData)) {
-        DB::transaction(function () use ($importData) {
-          DB::table('data')->insert($importData);
-        });
-      }
+        // Insert data in a transaction
+        if (!empty($importData)) {
+            DB::transaction(function () use ($importData) {
+                DB::table('data')->insert($importData);
+            });
+        }
 
-      return redirect()->back()->with('success', 'Data berhasil diimport');
+        // Redirect back with success message
+        return redirect()->back()->with('success', 'Data berhasil diimport, dengan pengecualian nomor polisi yang sudah ada.');
     } catch (\Exception $e) {
-      dd($e);
-      // Log::error("Kesalahan saat mengimpor data: " . $e->getMessage());
-      // return redirect()->back()->with('error', 'Kesalahan saat mengimpor data: ' . $e->getMessage());
+        // Log error and return error message
+        // Log::error("Kesalahan saat mengimpor data: " . $e->getMessage());
+        return redirect()->back()->with('error', 'Kesalahan saat mengimpor data: ' . $e->getMessage());
     }
-  }
+}
+
   public function updateData(Request $request, $id)
 {
     // Validasi input
     $validator = Validator::make($request->all(), [
         'nomer_polisi' => 'required|string|max:255',
         'volume' => 'required',
-        'nama_sopir' => 'required|string|max:255',
+        'nama_sopir' => 'required',
     ]);
 
     if ($validator->fails()) {

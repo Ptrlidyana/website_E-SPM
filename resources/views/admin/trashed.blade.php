@@ -34,7 +34,14 @@
         .form-inline .btn-excel {
             margin-left: 10px;
         }
-
+        .nav-link:hover {
+          color: #f8f9fa;
+          box-shadow: 0 4px 2px -2px rgba(255, 255, 255, 0.8);
+        }
+        .navbar-nav .nav-item .nav-link.active {
+          color: #f8f9fa;
+          box-shadow: 0 4px 2px -2px rgba(255, 255, 255, 1); 
+        }
     </style>
 </head>
 <body>
@@ -48,20 +55,20 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link text-white {{ request()->is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white {{ request()->is('karyawan/trashed') ? 'active' : '' }}" href="{{ route('karyawan.trashed') }}">Riwayat Sampah</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="{{ route('data.nomer') }}">Data Nomer</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="{{ route('data.user') }}">Data User</a>
-        </li>
-      </ul>
+  <ul class="navbar-nav me-auto">
+  <li class="nav-item">
+        <a class="nav-link text-white {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-white {{ request()->routeIs('karyawan.trashed') ? 'active' : '' }}" href="{{ route('karyawan.trashed') }}">Riwayat Sampah</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white {{ request()->routeIs('data.nomer') ? 'active' : '' }}" href="{{ route('data.nomer') }}">Data Nomer</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white {{ request()->routeIs('data.user') ? 'active' : '' }}" href="{{ route('data.user') }}">Data User</a>
+    </li>
+  </ul>
       <ul class="navbar-nav ms-auto">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

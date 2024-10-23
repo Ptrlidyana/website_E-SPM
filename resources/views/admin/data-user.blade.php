@@ -41,32 +41,41 @@
             margin-top: 0;
             padding-top: 0;
         }
-
         .navbar-custom {
             margin-bottom: 0;
+        }
+        .nav-link:hover {
+          color: #f8f9fa;
+          box-shadow: 0 4px 2px -2px rgba(255, 255, 255, 0.8);
+        }
+        .navbar-nav .nav-item .nav-link.active {
+          color: #f8f9fa;
+          box-shadow: 0 4px 2px -2px rgba(255, 255, 255, 1); 
         }
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-custom">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#"><img src="/images/logo_sasa.png" alt="Sasa Logo"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
+            <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                <img src="/images/logo_sasa.png" alt="Sasa Logo">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-white {{ request()->is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
+                <a class="nav-link text-white {{ request()->routeIs('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white {{ request()->is('karyawan/trashed') ? 'active' : '' }}" href="{{ route('karyawan.trashed') }}">Riwayat Sampah</a>
+                <a class="nav-link text-white {{ request()->routeIs('karyawan/trashed') ? 'active' : '' }}" href="{{ route('karyawan.trashed') }}">Riwayat Sampah</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('data.nomer') }}">Data Nomer</a>
+                <a class="nav-link text-white {{ request()->routeIs('data.nomer') ? 'active' : '' }}" href="{{ route('data.nomer') }}">Data Nomer</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('data.user') }}">Data User</a>
+                <a class="nav-link text-white {{ request()->routeIs('data.user') ? 'active' : '' }}" href="{{ route('data.user') }}">Data User</a>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto">
