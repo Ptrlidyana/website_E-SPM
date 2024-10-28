@@ -85,8 +85,8 @@ class KaryawanController extends Controller
         $drawing1->setName('Bukti Timbang');
         $drawing1->setDescription('Bukti Timbang');
         $drawing1->setPath($fullPath1);
-        $drawing1->setWidth(80);
-        $drawing1->setHeight(60);
+        $drawing1->setWidth(150);
+        $drawing1->setHeight(90);
         $drawing1->setCoordinates('F' . $row);
         $drawing1->setOffsetX(5);
         $drawing1->setOffsetY(5);
@@ -194,8 +194,8 @@ class KaryawanController extends Controller
         $drawing1->setName('Bukti Timbang');
         $drawing1->setDescription('Bukti Timbang');
         $drawing1->setPath($fullPath1);
-        $drawing1->setWidth(80);
-        $drawing1->setHeight(60);
+        $drawing1->setWidth(150);
+        $drawing1->setHeight(90);
         $drawing1->setCoordinates('F' . $row);
         $drawing1->setOffsetX(5);
         $drawing1->setOffsetY(5);
@@ -364,11 +364,9 @@ class KaryawanController extends Controller
           'second_file_upload' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
       ]);
   
-      // Cek apakah no_po sudah ada di database
       $existingPo = Karyawan::where('no_po', $validated['no_po'])->first();
   
       if ($existingPo) {
-          // Jika nomor PO sudah terdaftar, kembali dengan pesan error
           return back()->withErrors(['no_po' => 'Nomor PO anda telah terdaftar!'])->withInput();
       }
   

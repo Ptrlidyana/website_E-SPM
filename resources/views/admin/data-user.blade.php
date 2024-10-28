@@ -106,10 +106,6 @@
 <div class="container mt-4 p-4 bg-white rounded">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Data User</h1>
-        <form method="GET" action="{{ route('data.user') }}" class="d-flex">
-            <input type="text" name="search" class="form-control me-2" placeholder="Cari pengguna..." value="{{ request()->input('search') }}" style="width: 200px;">
-            <button type="submit" class="btn btn-primary">Cari</button>
-        </form>
     </div>
     <table id="userTable" class="table table-bordered">
         <thead>
@@ -129,7 +125,8 @@
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->usertype }}</td>
                     <td>
-                        <a href="#" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $user->id }}">Lihat Detail</a>
+                    <a href="#" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $user->id }}">Lihat Detail</a>
+
                         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $user->id }}">Hapus</button>
                     </td>
                 </tr>
@@ -209,6 +206,8 @@
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
 
     <script>
         $(document).ready(function () {
